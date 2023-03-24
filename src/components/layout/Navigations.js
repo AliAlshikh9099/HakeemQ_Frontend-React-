@@ -4,16 +4,16 @@ const Navigations = () => {
     return (
         <ul className={classes.nav}>
             <li>
-                <a href="#">Home</a>
+                <a href="#home">Home</a>
             </li>
             <li>
-                <a href="#">Features</a>
+                <a href="#features">Features</a>
             </li>
             <li>
-                <a href="#">About Us</a>
+                <a href="#about">About Us</a>
             </li>
             <li>
-                <a href="#">Doctors</a>
+                <a href="#doctors">Doctors</a>
             </li>
         </ul>
     )

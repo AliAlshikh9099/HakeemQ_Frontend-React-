@@ -16,7 +16,8 @@
     margin-bottom: 5px;
 }
 .control input,
-.control textarea {
+.control textarea,
+.control select {
     width: 100%;
     padding: 5px 10px;
     font-size: 16px;
@@ -24,6 +25,15 @@
     background-color: #f8f5f5;
     transition: 0.3s;
 }
+
+.control textarea {
+    height: 95px;
+}
+
+.control select {
+    margin-bottom: 10px;
+}
+
 .control textarea {
     resize: none;
 }
