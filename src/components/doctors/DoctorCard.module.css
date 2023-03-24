@@ -1,0 +1,24 @@
+.doctor {
+    padding: 10px;
+    border-radius: 6px;
+    transition: 0.3s;
+    text-align: center;
+}
+.doctor:hover {
+    transform: scale(1.05);
+    background-color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+.doctor img {
+    width: 100%;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+.doctor h2 {
+    color: var(--primary-alt);
+}
+.doctor p {
+    color: #777;
+    font-size: 16px;
+    margin: 10px 0;
+}

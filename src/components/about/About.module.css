@@ -1,0 +1,7 @@
+.about {
+    padding-top: var(--section-padding);
+    padding-bottom: var(--section-padding);
+}
+.content {
+    margin-top: 60px;
+}

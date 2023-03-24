@@ -1,0 +1,12 @@
+.image {
+    max-width: 820px;
+}
+.image img {
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    .image {
+        display: none;
+    }
+}
