@@ -3,7 +3,7 @@ import classes from './MenuBar.module.css';
 const MenuBar = (props) => {
     return (
         <>
-            <div className={classes['menu-bar']}>
+            <div className={`${classes['menu-bar']} ${props.isClicked ? classes.clicked : ''}`}>
                 <ul className={classes.nav}>
                     <li>
                         <a href="#home">Home</a>

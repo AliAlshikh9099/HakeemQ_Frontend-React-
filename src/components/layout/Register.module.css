@@ -9,8 +9,6 @@
 }
 .button {
     background-color: var(--primary);
-    color: #fff;
-    
 }
 .button:hover {
     background-color: var(--primary-alt);
@@ -26,11 +24,21 @@
     letter-spacing: 0.5px;
     border-radius: 5px;
 }
+.button a {
+    color: #fff;
+}
 .button--alt {
     background-color: transparent;
     border: 1px solid var(--primary-alt);
 }
 .button--alt:hover {
     background-color: var(--primary-alt);
+    color: #fff;
+}
+.button--alt a {
+    color: #000;
+    transition: 0.3s;
+}
+.button--alt:hover a {
     color: #fff;
 }

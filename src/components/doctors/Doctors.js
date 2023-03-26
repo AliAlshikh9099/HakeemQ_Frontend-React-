@@ -44,7 +44,7 @@ const Doctors = () => {
     }
 
     return (
-        <div className={classes.doctors}>
+        <div id="doctors" className={classes.doctors}>
             <Title>Meet our specialist</Title>
             <p style={{ textAlign: 'center', color: '#777', margin: '10px'}}>Who will help you to have a fresh health.</p>
             <div className={`container ${classes.content}`}>

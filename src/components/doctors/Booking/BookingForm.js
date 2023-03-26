@@ -29,7 +29,6 @@ const BookingForm = (props) => {
         setAvailableTimes(day.times);
     }, [selectedDay])
 
-
     return (
         <form onSubmit={submitHandler}>
             <div className={classes['input-form']}>

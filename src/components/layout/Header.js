@@ -34,14 +34,14 @@ const Header = () => {
             <div className={`container ${classes.content}`}>
                 <div className={classes['right-item']}>
                     <h1 className={classes.logo}>
-                        <a href='/home'>HakeemQ</a>
+                        <a href='/'>HakeemQ</a>
                     </h1>
                     <Navigations />
                 </div>
                 <Register />
                 <Bar onClick={barClickHandler} />
             </div>
-            {barIsClicked && <MenuBar isClicke={barIsClicked}/>}
+            <MenuBar isClicked={barIsClicked}/>
         </header>
     )
 }

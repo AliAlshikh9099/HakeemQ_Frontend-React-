@@ -4,7 +4,7 @@ import Image from './Image';
 
 const Hero = () => {
     return (
-        <div className={classes.hero}>
+        <div id="home" className={classes.hero}>
             <div className={`container ${classes.content}`} style={{width: '100%'}}>
                 <Text />
                 <Image />

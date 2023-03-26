@@ -1,7 +1,7 @@
 .menu-bar {
     position: fixed;
     top: 62px;
-    left: 0;
+    left: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.8);
     height: 100%;
@@ -9,7 +9,7 @@
     padding: 20px;
     z-index: 101;
 }
-.menu-bar.clicked {
+.clicked {
     left: 0;
 }
 .menu-bar ul {
