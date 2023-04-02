@@ -1,5 +1,6 @@
 import classes from './Navigations.module.css';
 
+
 const Navigations = () => {
     return (
         <ul className={classes.nav}>

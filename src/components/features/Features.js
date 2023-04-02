@@ -16,7 +16,8 @@ const FEATURES = [
 const Features = () => {
     return (
         <div id="features" className={classes.features}>
-            <Title>Why you should trust us? <br /> Get know about us</Title>
+            <Title>Why you should trust us?</Title>
+            <p style={{textAlign: 'center', marginTop: '10px', color: '#777'}}>Get know about us</p>
             <div className={`container ${classes.content}`}>
                 {FEATURES.map(feature => <FeatureItem key={feature.title} icon={feature.icon} title={feature.title} description={feature.description} />)}
             </div>

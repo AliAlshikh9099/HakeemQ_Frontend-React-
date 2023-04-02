@@ -26,6 +26,20 @@
     transition: 0.3s;
 }
 
+.invalid input {
+    background-color: #f89a9a;
+    border-color: red;
+}
+
+.invalid input:focus {
+    background-color: #e2b1b1;
+    border-color: red !important;
+}
+.error-text {
+    color: red;
+    margin-top: 4px;
+}
+
 .control textarea {
     height: 95px;
 }
@@ -63,6 +77,12 @@
 }
 .action .button:hover {
     background-color: var(--primary-alt);
+}
+.action .button:disabled {
+    cursor: not-allowed;
+    background-color: #ccc;
+    border-color: #ccc;
+    color: #000;
 }
 .action .button--alt {
     background-color: transparent;
