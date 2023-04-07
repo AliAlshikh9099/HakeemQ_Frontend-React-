@@ -1,16 +1,18 @@
 import classes from './DoctorCard.module.css';
 import DoctorIcon from '../../assets/Doctor-icon.jpg';
 
+import { Link } from 'react-router-dom';
+
 const DoctorCard = (props) => {
     const bookHandler = () => {
-        props.onBook(props.index);
+        props.onBook(props.id);
     }
     return (
         <div className={classes.doctor}>
             <img alt='doctor' src={DoctorIcon}/>
             <h2>Dr. {props.name}</h2>
             <p>{props.spz}</p>
-            <button onClick={bookHandler}>View</button>
+            <Link to={`/${props.id}`}>View</Link>
         </div>
     )
 }

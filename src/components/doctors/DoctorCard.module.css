@@ -22,7 +22,7 @@
     font-size: 16px;
     margin: 10px 0;
 }
-.doctor button {
+.doctor a {
     background-color: var(--primary);
     color: #fff;
     font-weight: bold;
@@ -32,7 +32,8 @@
     padding: 10px 20px;
     border-radius: 5px;
     transition: 0.3s;
+    display: inline-block;
 }
-.doctor button:hover {
+.doctor a:hover {
     background-color: var(--primary-alt);
 }

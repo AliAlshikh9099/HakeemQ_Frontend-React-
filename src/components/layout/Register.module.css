@@ -1,6 +1,7 @@
 .reg {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 @media (max-width: 767px) {
     .reg {
@@ -24,7 +25,7 @@
     letter-spacing: 0.5px;
     border-radius: 5px;
 }
-.button a {
+.button {
     color: #fff;
 }
 .button--alt {
@@ -35,10 +36,10 @@
     background-color: var(--primary-alt);
     color: #fff;
 }
-.button--alt a {
+.button--alt {
     color: #000;
     transition: 0.3s;
 }
-.button--alt:hover a {
+.button--alt:hover {
     color: #fff;
 }

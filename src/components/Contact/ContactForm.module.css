@@ -29,6 +29,15 @@
     height: 120px;
     resize: none;
 }
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    opacity: 1;
+    transition: 0.3s;
+}
+.contact-form input:focus::placeholder,
+.contact-form textarea:focus::placeholder {
+    opacity: 0;
+}
 .contact-form .action {
     text-align: center;
 }

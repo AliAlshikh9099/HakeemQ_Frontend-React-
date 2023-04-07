@@ -2,8 +2,6 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
-    position: relative;
-    top: -25px;
 }
 .contact-info li {
     display: flex;

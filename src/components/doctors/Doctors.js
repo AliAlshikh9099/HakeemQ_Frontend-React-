@@ -15,8 +15,8 @@ import Title from "../UI/Title";
 import { useState } from "react";
 
 import Modal from '../UI/Modal';
-import DoctorItem from "./Booking/DoctorItem";
-import BookingForm from "./Booking/BookingForm";
+import DoctorItem from "../doctor/DoctorItem";
+import BookingForm from "../doctor/Booking/BookingForm";
 
 const DUMMY_DOCTORS = [
     { id: 'd1', name: 'Omar Shahwan', spz: 'Dentist' },
@@ -26,7 +26,6 @@ const DUMMY_DOCTORS = [
     { id: 'd5', name: 'Omar Shahwan', spz: 'Dentist' },
     { id: 'd6', name: 'Omar Shahwan', spz: 'Dentist' },
     { id: 'd7', name: 'Omar Shahwan', spz: 'Dentist' },
-    
 ]
 
 const Doctors = () => {
@@ -34,9 +33,10 @@ const Doctors = () => {
     const [selectedDr, setSelectedDr] = useState({});
     const [isViewd, setIsViewd] = useState(false);
 
-    const bookDoctorHandler = (index) => {
+    const viewDoctorHandler = (drId) => {
         setIsViewd(true);
-        setSelectedDr(DUMMY_DOCTORS[index]);
+        const existingDr = DUMMY_DOCTORS.find(dr => dr.id === drId); 
+        setSelectedDr(existingDr);
     }
 
     const closeBookModalHandler = () => {
@@ -72,21 +72,21 @@ const Doctors = () => {
                 modules={[Pagination, Navigation]}
                 className={classes.swiper}
                 >
-                    {DUMMY_DOCTORS.map((dr, index) =>
+                    {DUMMY_DOCTORS.map(dr =>
                         <SwiperSlide key={dr.id}>
                             <DoctorCard
                                 name={dr.name}
                                 spz={dr.spz}
-                                index={index}
-                                onBook={bookDoctorHandler}
+                                id={dr.id}
+                                onBook={viewDoctorHandler}
                             />
                         </SwiperSlide>)}
                 </Swiper>
-                {isViewd &&
+                {/* {isViewd &&
                     <Modal onClose={closeBookModalHandler}>
                         <DoctorItem name={selectedDr.name} spz={selectedDr.spz} />
                         <BookingForm onClose={closeBookModalHandler} />
-                    </Modal>}
+                    </Modal>} */}
         </div>
     </div>
     );
