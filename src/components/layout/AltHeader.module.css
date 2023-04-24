@@ -1,0 +1,12 @@
+.header-alt {
+    width: 100%;
+    height: 4rem;
+    width: 100%;
+    position: absolute;
+}
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}

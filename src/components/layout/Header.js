@@ -6,6 +6,7 @@ import MenuBar from './NavigationsBar/MenuBar';
 import Register from './Register';
 
 import { Link } from 'react-router-dom';
+import Logo from '../logo/Logo';
 
 const Header = () => {
     const [barIsClicked, setBarIsClicked] = useState(false);
@@ -33,9 +34,7 @@ const Header = () => {
         <header className={`${classes.header} ${isScrolled ? classes['fixed-header'] : ''}`}>
             <div className={`container ${classes.content}`}>
                 <div className={classes['right-item']}>
-                    <h1 className={classes.logo}>
-                        <Link to='/'>HakeemQ</Link>
-                    </h1>
+                    <Logo />
                     <Navigations />
                 </div>
                 <Register />

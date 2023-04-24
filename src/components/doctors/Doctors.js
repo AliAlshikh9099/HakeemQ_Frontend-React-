@@ -12,11 +12,6 @@ import { Navigation } from "swiper";
 
 import DoctorCard from "./DoctorCard";
 import Title from "../UI/Title";
-import { useState } from "react";
-
-import Modal from '../UI/Modal';
-import DoctorItem from "../doctor/DoctorItem";
-import BookingForm from "../doctor/Booking/BookingForm";
 
 const DUMMY_DOCTORS = [
     { id: 'd1', name: 'Omar Shahwan', spz: 'Dentist' },
@@ -30,47 +25,34 @@ const DUMMY_DOCTORS = [
 
 const Doctors = () => {
 
-    const [selectedDr, setSelectedDr] = useState({});
-    const [isViewd, setIsViewd] = useState(false);
-
-    const viewDoctorHandler = (drId) => {
-        setIsViewd(true);
-        const existingDr = DUMMY_DOCTORS.find(dr => dr.id === drId); 
-        setSelectedDr(existingDr);
-    }
-
-    const closeBookModalHandler = () => {
-        setIsViewd(false);
-    }
-
     return (
         <div id="doctors" className={classes.doctors}>
             <Title>Meet our specialist</Title>
             <p style={{ textAlign: 'center', color: '#777', margin: '10px'}}>Who will help you to have a fresh health.</p>
             <div className={`container ${classes.content}`}>
                 <Swiper
-                slidesPerView={1}
-                spaceBetween={10}
-                pagination={{
-                    clickable: true,
-                }}
-                navigation={true}
-                breakpoints={{
-                    640: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                    },
-                    768: {
-                    slidesPerView: 3,
-                    spaceBetween: 40,
-                    },
-                    1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 50,
-                    },
-                }}
-                modules={[Pagination, Navigation]}
-                className={classes.swiper}
+                    slidesPerView={1}
+                    spaceBetween={10}
+                    pagination={{
+                        clickable: true,
+                    }}
+                    navigation={true}
+                    breakpoints={{
+                        640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                        },
+                        768: {
+                        slidesPerView: 3,
+                        spaceBetween: 40,
+                        },
+                        1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 50,
+                        },
+                    }}
+                    modules={[Pagination, Navigation]}
+                    className={classes.swiper}
                 >
                     {DUMMY_DOCTORS.map(dr =>
                         <SwiperSlide key={dr.id}>
@@ -78,15 +60,9 @@ const Doctors = () => {
                                 name={dr.name}
                                 spz={dr.spz}
                                 id={dr.id}
-                                onBook={viewDoctorHandler}
                             />
                         </SwiperSlide>)}
                 </Swiper>
-                {/* {isViewd &&
-                    <Modal onClose={closeBookModalHandler}>
-                        <DoctorItem name={selectedDr.name} spz={selectedDr.spz} />
-                        <BookingForm onClose={closeBookModalHandler} />
-                    </Modal>} */}
         </div>
     </div>
     );

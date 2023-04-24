@@ -1,10 +1,10 @@
-import Header from '../../components/layout/Header';
+import AltHeader from '../../components/layout/AltHeader';
 import Login from '../../components/Login/Login';
 
 const LoginPage = () => {
     return (
         <>
-            <Header />
+            <AltHeader />
             <Login />
         </>
     )

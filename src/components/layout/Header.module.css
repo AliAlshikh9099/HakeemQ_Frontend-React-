@@ -20,8 +20,3 @@
     display: flex;
     gap: 40px;
 }
-.logo a {
-    color: var(--primary);
-    font-size :28px;
-
-}

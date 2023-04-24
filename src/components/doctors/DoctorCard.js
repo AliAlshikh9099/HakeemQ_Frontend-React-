@@ -4,9 +4,6 @@ import DoctorIcon from '../../assets/Doctor-icon.jpg';
 import { Link } from 'react-router-dom';
 
 const DoctorCard = (props) => {
-    const bookHandler = () => {
-        props.onBook(props.id);
-    }
     return (
         <div className={classes.doctor}>
             <img alt='doctor' src={DoctorIcon}/>
