@@ -8,6 +8,7 @@
     display: flex;
     align-items: center;
     gap: 100px;
+    margin: 10px 0;
 }
 .date p {
     display: inline-block;

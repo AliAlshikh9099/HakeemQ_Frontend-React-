@@ -1,18 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import classes from './Header.module.css';
 import Navigations from './Navigations';
 import Bar from './NavigationsBar/Bar';
 import MenuBar from './NavigationsBar/MenuBar';
-import Register from './Register';
 
 import { Link } from 'react-router-dom';
 import Logo from '../logo/Logo';
+
+import AuthContext from '../../store/auth-context';
 
 const Header = () => {
     const [barIsClicked, setBarIsClicked] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
-    const barClickHandler = () => {
+    const authCtx = useContext(AuthContext);
+
+    const toggleMenuBarHandler = () => {
         setBarIsClicked((prevState) => {
             return !prevState;
         });
@@ -37,8 +40,12 @@ const Header = () => {
                     <Logo />
                     <Navigations />
                 </div>
-                <Register />
-                <Bar onClick={barClickHandler} />
+                {!authCtx.isAuth && <div className={classes.reg}>
+                    <Link className={classes['button--alt']} to='/login'>Login</Link>
+                    <Link className={classes.button} to='/register'>Register</Link>
+                </div>}
+                {authCtx.isAuth && <Link className={classes.button} to='/dashboard'>Your dashboard</Link>}
+                <Bar onClick={toggleMenuBarHandler} />
             </div>
             <MenuBar isClicked={barIsClicked}/>
         </header>

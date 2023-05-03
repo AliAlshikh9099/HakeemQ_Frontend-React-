@@ -9,12 +9,14 @@ import AvailableDates from "./AvailableDates";
 const DoctorProfile = props => {
     const { name, spz, education, experience, availableTimes } = props.doctorInfo;
     const [bookingModalIsVisible, setBookingModalIsVisible] = useState(false);
+
     const bookAppoitmentHandler = () => {
         setBookingModalIsVisible(true);
     };
     const closeBookingModalHandler = () => {
         setBookingModalIsVisible(false);
     };
+
     return (
         <div className={`${classes.profile} container`}>
             <DoctorDetail
@@ -30,7 +32,10 @@ const DoctorProfile = props => {
             <MoreInfo />
             {bookingModalIsVisible && <Modal onClose={closeBookingModalHandler}>
                 <h1 style={{ marginBottom: '20px' }}>Dr.{name}</h1>
-                <BookingForm onClose={closeBookingModalHandler} />
+                <BookingForm
+                    times={availableTimes}
+                    onClose={closeBookingModalHandler}
+                />
             </Modal>}
         </div>
     )

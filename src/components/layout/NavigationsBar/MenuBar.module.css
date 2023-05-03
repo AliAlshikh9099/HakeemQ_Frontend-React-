@@ -29,7 +29,8 @@
     color: var(--primary);
     padding-left: 3px;
 }
-.reg button {
+.reg .button,
+.reg .button--alt {
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
@@ -40,12 +41,12 @@
 }
 .reg .button {
     background-color: var(--primary);
-    margin-right: 10px;
 }
 .reg .button--alt {
     background-color: transparent;
     border: 1px solid var(--primary);
     transition: 0.3s;
+    margin-right: 10px;
 }
 .reg .button--alt:hover {
     background-color: var(--primary);

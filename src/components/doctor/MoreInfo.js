@@ -1,10 +1,10 @@
-import AltCard from '../UI/AltCard';
+import Accordion from '../UI/Accordion';
 
 const MoreInfo = props => {
     return (
-        <AltCard
+        <Accordion
             title="More About Doctor"
-            info="Something"
+            content="Something"
         />
     )
 }

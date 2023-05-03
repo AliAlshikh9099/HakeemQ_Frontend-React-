@@ -1,12 +1,12 @@
 import classes from './DoctorForm.module.css';
 
 import useInput from '../../hooks/use-input';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { RotatingLines } from 'react-loader-spinner';
 
-
 import axios from 'axios';
+import AuthContext from '../../store/auth-context';
 
 const spzs = ['Dentist', 'Orthopedist', 'Pediatrician', 'Plastci', 'Urologist', 'Ophthalmologist'];
 
@@ -19,6 +19,8 @@ const DoctorForm = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isRegistered, setIsRegistered] = useState(false);
+    const [msg, setMsg] = useState('');
+    const authCtx = useContext(AuthContext);
 
     const { 
         value: enteredName,
@@ -93,15 +95,18 @@ const DoctorForm = () => {
             gender: selectedGender,
             spz: selectedSpz
         }
-        console.log(registerData);
-        axios.post('https://react-http-efe1d-default-rtdb.firebaseio.com/register.json', registerData,{
+        axios.post('http://192.168.43.7:8000/api/register', registerData, {
             headers: {
-            'content-type': 'application/json'
-            }})
-            .then(res => { 
-                console.log(res)
+                'content-type': 'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
                 setIsLoading(false);
                 setIsRegistered(true);
+                setMsg(data.msg);
+                authCtx.register(data.token);
             })
             .catch(error => {
                 console.log(error);
@@ -194,14 +199,14 @@ const DoctorForm = () => {
                                 strokeColor='var(--primary)'
                                 strokeWidth="5"
                                 animationDuration="0.75"
-                                width="30"
+                                width="25"
                                 visible={true}
                             />
                         : 'Register'}
                     </button>
                 </div>
             </form>
-            {!isLoading && isRegistered && <h1>Welcome to our team, please check your mail inbox.</h1>}
+            {!isLoading && isRegistered && <h1>{msg}</h1>}
         </div>
     )
 }
