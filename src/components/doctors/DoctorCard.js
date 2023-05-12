@@ -9,7 +9,7 @@ const DoctorCard = (props) => {
             <img alt='doctor' src={DoctorIcon}/>
             <h2>Dr. {props.name}</h2>
             <p>{props.spz}</p>
-            <Link to={`/${props.id}`}>View</Link>
+            <Link to={`/doctors/${props.id}`}>View</Link>
         </div>
     )
 }

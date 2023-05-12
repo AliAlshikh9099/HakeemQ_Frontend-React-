@@ -1,7 +1,7 @@
 import classes from './Dashboard.module.css';
 
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import DashboardSidebar from '../../components/dashboard/sidebar/DashboardSidebar';
 import DashHeader from '../../components/dashboard/header/DashHeader';
@@ -12,7 +12,7 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-        axios.get('http://192.168.43.171:8000/api/welcome', {
+        axios.get('http://192.168.43.7:8000/api/welcome', {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`

@@ -12,18 +12,69 @@ import { Navigation } from "swiper";
 
 import DoctorCard from "./DoctorCard";
 import Title from "../UI/Title";
+import { useEffect, useState, useCallback, useContext } from "react";
+import ApiContext from "../../store/api-context";
+import axios from "axios";
 
-const DUMMY_DOCTORS = [
-    { id: 'd1', name: 'Omar Shahwan', spz: 'Dentist' },
-    { id: 'd2', name: 'Ali Alshikh', spz: 'Plastci' },
-    { id: 'd3', name: 'Omar Shahwan', spz: 'Dentist' },
-    { id: 'd4', name: 'Omar Shahwan', spz: 'Dentist' },
-    { id: 'd5', name: 'Omar Shahwan', spz: 'Dentist' },
-    { id: 'd6', name: 'Omar Shahwan', spz: 'Dentist' },
-    { id: 'd7', name: 'Omar Shahwan', spz: 'Dentist' },
-]
+import { RotatingLines } from "react-loader-spinner";
+
+
+// const DUMMY_DOCTORS = [
+//     { id: 'd1', name: 'Omar Shahwan', spz: 'Dentist' },
+//     { id: 'd2', name: 'Ali Alshikh', spz: 'Plastci' },
+//     { id: 'd3', name: 'Omar Shahwan', spz: 'Dentist' },
+//     { id: 'd4', name: 'Omar Shahwan', spz: 'Dentist' },
+//     { id: 'd5', name: 'Omar Shahwan', spz: 'Dentist' },
+//     { id: 'd6', name: 'Omar Shahwan', spz: 'Dentist' },
+//     { id: 'd7', name: 'Omar Shahwan', spz: 'Dentist' },
+// ]
 
 const Doctors = () => {
+    const [doctors, setDoctors] = useState([]);
+    const sendRequest = useContext(ApiContext).sendRequest;
+    const isLoading = useContext(ApiContext).isLoading;
+    const error = useContext(ApiContext).error;
+
+    const fetchDoctors = useCallback(async () => {
+        try {
+            const data = await sendRequest({ url: 'http://192.168.43.7:8000/api/doctors' });
+            setDoctors(data.data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }, []);
+    
+    useEffect(() => {
+        fetchDoctors();
+    }, [fetchDoctors]);
+
+    let content;
+
+    if (isLoading) {
+        content = <RotatingLines
+                    strokeColor='var(--primary)'
+                    strokeWidth="5"
+                    animationDuration="0.75"
+                    width="220"
+                    visible={true}
+                />
+    }
+    if (!isLoading && error) {
+        content = <p>{error}</p>
+    }
+    if (!isLoading && !error) {
+        content = (
+            doctors.map(dr =>
+                <SwiperSlide key={dr.id}>
+                    <DoctorCard
+                        name={dr.name}
+                        spz={dr.spz}
+                        id={dr.id}
+                    />
+                </SwiperSlide>)
+        )
+    }
 
     return (
         <div id="doctors" className={classes.doctors}>
@@ -54,14 +105,15 @@ const Doctors = () => {
                     modules={[Pagination, Navigation]}
                     className={classes.swiper}
                 >
-                    {DUMMY_DOCTORS.map(dr =>
+                    {/* {doctors.map(dr =>
                         <SwiperSlide key={dr.id}>
                             <DoctorCard
                                 name={dr.name}
                                 spz={dr.spz}
                                 id={dr.id}
                             />
-                        </SwiperSlide>)}
+                        </SwiperSlide>)} */}
+                    {content}
                 </Swiper>
         </div>
     </div>

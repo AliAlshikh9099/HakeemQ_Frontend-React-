@@ -15,37 +15,7 @@
     gap: 20px;
     margin-top: 20px;
 }
-.doctor-form label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-}
-.doctor-form input,
-.doctor-form select {
-    width: 100%;
-    padding: 5px;
-    transition: 0.3s;
-    font-size: 15px;
-    border: 1px solid #aaa;
-    background-color: #f8f5f5;
-}
-.doctor-form input:focus,
-.doctor-form select:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-.invalid input {
-    background-color: #f89a9a;
-    border-color: red;
-}
-.invalid input:focus {
-    background-color: #e2b1b1;
-    border-color: red;
-}
-.doctor-form .error-text {
-    color: red;
-    margin-top: 4px;
-}
+
 .button {
     text-align: center;
     width: 100%;
@@ -68,4 +38,58 @@
     background-color: #ccc;
     border-color: #ccc;
     color: #000;
+}
+.reg-alert {
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    width: 420px;
+}
+@media (max-width: 620px) {
+    .reg-alert {
+        width: 80%;
+    }
+}
+.reg-alert .msg {
+    margin: 20px 0;
+}
+.reg-alert h3 {
+    font-size: 28px;
+    color: var(--primary-alt);
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+.reg-alert p {
+    color: #777;
+
+}
+.reg-alert a {
+    color: #fff;
+    background-color: var(--primary);
+    padding: 8px 15px;
+    margin-right: 11px
+}
+.reg-alert button {
+    color: var(--primary);
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.reg-alert button:hover {
+    color: #fff;
+    background-color: var(--primary);
+}
+.icon {
+    font-size: 80px;
+}
+.icon.success {
+    color: #2c962c;
+}
+.icon.danger {
+    color: red;
 }

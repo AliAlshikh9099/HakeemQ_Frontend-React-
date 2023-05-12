@@ -11,7 +11,7 @@ const MenuList = props => {
     const navigate = useNavigate();
 
     const logoutHandler = () => {
-        axios.post('http://192.168.43.171:8000/api/logout', {}, {
+        axios.post('http://192.168.43.7:8000/api/logout', {}, {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`

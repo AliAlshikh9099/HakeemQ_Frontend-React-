@@ -14,7 +14,7 @@ const Modal = (props) => {
     return (
         <>
             {ReactDOM.createPortal(<Backdrop onColse={props.onClose} />, portalElement)}
-            {ReactDOM.createPortal(<div className={classes.modal}>{props.children}</div>, portalElement)}
+            {ReactDOM.createPortal(<div className={`${classes.modal} ${props.className}`}>{props.children}</div>, portalElement)}
         </>
     )
 }

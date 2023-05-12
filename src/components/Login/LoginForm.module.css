@@ -27,6 +27,18 @@
     border-color: var(--primary);
     outline: none;
 }
+.invalid input {
+    background-color: #f89a9a;
+    border-color: red;
+}
+.invalid input:focus {
+    background-color: #e2b1b1;
+    border-color: red;
+}
+.error-text {
+    color: red;
+    margin-top: 4px;
+}
 .action {
     margin-top: 20px;
 }
@@ -44,4 +56,10 @@
 }
 .action button:hover {
     background-color: var(--primary-alt);
+}
+button:disabled {
+    cursor: not-allowed;
+    background-color: #ccc;
+    border-color: #ccc;
+    color: #000;
 }

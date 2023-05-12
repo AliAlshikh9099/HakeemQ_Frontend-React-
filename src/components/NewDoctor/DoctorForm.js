@@ -8,7 +8,12 @@ import { RotatingLines } from 'react-loader-spinner';
 import axios from 'axios';
 import AuthContext from '../../store/auth-context';
 
-const spzs = ['Dentist', 'Orthopedist', 'Pediatrician', 'Plastci', 'Urologist', 'Ophthalmologist'];
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import Modal from '../UI/Modal';
+import Input from '../UI/Input';
+
 
 const validateName = value => value.trim() !== '';
 const validateEmail = value => value.includes('@');
@@ -19,6 +24,8 @@ const DoctorForm = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isRegistered, setIsRegistered] = useState(false);
+    const [error, setError] = useState(null);
+    const [regAlertIsOpen, setRegAlertIsOpen] = useState(false);
     const [msg, setMsg] = useState('');
     const authCtx = useContext(AuthContext);
 
@@ -100,17 +107,20 @@ const DoctorForm = () => {
                 'content-type': 'application/json'
             }
         })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
+            .then(res => {
+                console.log(res);
                 setIsLoading(false);
                 setIsRegistered(true);
-                setMsg(data.msg);
-                authCtx.register(data.token);
+                setRegAlertIsOpen(true);
+                setMsg(res.data.msg);
+                const token = res.data.token;
+                authCtx.register(res.data.data, token);
             })
             .catch(error => {
                 console.log(error);
+                setError(error.message);
                 setIsLoading(false);
+                setRegAlertIsOpen(true);
             })
         resetName();
         resetEmail();
@@ -120,78 +130,144 @@ const DoctorForm = () => {
         resetGender();
     }
 
-    const invalidNameClasses = nameHasError ? `${classes.control} ${classes.invalid}` : classes.control;
-    const invalidEmailClasses = emailHasError ? `${classes.control} ${classes.invalid}` : classes.control;
-    const invalidPasswordClasses = passwordHasError ? `${classes.control} ${classes.invalid}` : classes.control;
-    const invalidPhoneClasses = phoneHasError ? `${classes.control} ${classes.invalid}` : classes.control;
+
+    const closeRegAlertHandler = () => {
+        setRegAlertIsOpen(false);
+    }
+
+    const inputElements = [
+        {
+            elementType: 'input',
+            id: 'name',
+            hasError: nameHasError,
+            errorMsg: 'Please enter a valid name (non empty value).',
+            config: {
+                type: 'text',
+                name: 'name',
+                value: enteredName,
+                onBlur: nameBlurHandler,
+                onChange: nameChangeHandler,
+            }
+        },
+        {
+            elementType: 'input',
+            id: 'email',
+            hasError: emailHasError,
+            errorMsg: 'Please enter a valid email.',
+            config: {
+                type: 'email',
+                name: 'email',
+                value: enteredEmail,
+                onBlur: emailBlurHandler,
+                onChange: emailChangeHandler,
+            }
+        },
+        {
+            elementType: 'input',
+            id: 'password',
+            hasError: passwordHasError,
+            errorMsg: 'Please enter a valid password (non empty value).',
+            config: {
+                type: 'password',
+                name: 'password',
+                value: enteredPassword,
+                onBlur: passwordBlurHandler,
+                onChange: passwordChangeHandler,
+            }
+        },
+        {
+            elementType: 'input',
+            id: 'phone',
+            hasError: phoneHasError,
+            errorMsg: 'Please enter a valid phone',
+            config: {
+                type: 'tel',
+                name: 'phone',
+                value: enteredPhone,
+                onBlur: phoneBlurHandler,
+                onChange: phoneChangeHandler,
+            }
+        },
+        {
+            elementType: 'select',
+            id: 'gender',
+            config: {
+                value: selectedGender,
+                onChange: genderChangeHandler,
+            },
+            options: [
+                { value: '', inner: '--please select your gender--' },
+                { value: 'Male', inner: 'Male' },
+                { value: 'Female', inner: 'Female' }
+            ]
+        },
+        {
+            elementType: 'select',
+            id: 'speciality',
+            config: {
+                value: selectedSpz,
+                onChange: spzChangeHandler,
+            },
+            options: [
+                { value: '', inner: '--please select your spz--' },
+                { value: 'Dentist', inner: 'Dentist' },
+                { value: 'Orthopedist', inner: 'Orthopedist' },
+                { value: 'Pediatrician', inner: 'Pediatrician' },
+                { value: 'Plastci', inner: 'Plastci' },
+                { value: 'Urologist', inner: 'Urologist' },
+                { value: 'Ophthalmologist', inner: 'Ophthalmologist'}
+            ]
+        }
+    ]
+
+    let alertContent;
+
+    if (isRegistered && !isLoading && !error) {
+        alertContent = (
+            <>
+                <FontAwesomeIcon className={`${classes.icon} ${classes.success}`} icon={faCheckCircle} />
+                <div className={classes.msg}>
+                    <h3>Welcome to our team</h3>
+                    <p>{msg}</p>
+                </div>
+                <div className={classes.actions}>
+                    <Link to="/dashboard">Go to dashboard </Link>
+                    <button onClick={closeRegAlertHandler}>Close</button>
+                </div>
+            </>
+        )
+    }
+    if (error && !isLoading) {
+        alertContent = (
+            <>
+                <FontAwesomeIcon className={`${classes.icon} ${classes.danger}`} icon={faCircleXmark} />
+                <div className={classes.msg}>
+                    <h3>Something went wrong!</h3>
+                    <p>{error}</p>
+                </div>
+                <div className={classes.actions}>
+                    <button onClick={closeRegAlertHandler}>Close</button>
+                </div>
+            </>
+        )
+    }
 
     return (
         <div className={classes['doctor-form']}>
             <h1>Create your account</h1>
             <form onSubmit={registerHandler}>
-                <div className={invalidNameClasses}>
-                    <label>Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={enteredName}
-                        onBlur={nameBlurHandler}
-                        onChange={nameChangeHandler}
+                {inputElements.map(el =>
+                    <Input
+                        key={el.id}
+                        id={el.id}
+                        elementType={el.elementType}
+                        config={el.config}
+                        classes={el.classes}
+                        options={el.options}
+                        hasError={el.hasError}
+                        errorMsg={el.errorMsg}
                     />
-                    {nameHasError && <p className={classes['error-text']}>Please enter valid name (not empty value).</p>}
-                </div>
-                <div className={invalidEmailClasses}>
-                    <label>Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        value={enteredEmail}
-                        onBlur={emailBlurHandler}
-                        onChange={emailChangeHandler}
-                    />
-                    {emailHasError && <p className={classes['error-text']}>Please enter valid email.</p>}
-                </div>
-                <div className={invalidPasswordClasses}>
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        value={enteredPassword}
-                        onBlur={passwordBlurHandler}
-                        onChange={passwordChangeHandler}
-                    />
-                    {passwordHasError && <p className={classes['error-text']}>Password isn't strong enough (8 charecters at least).</p>}
-                </div>
-                <div className={invalidPhoneClasses}>
-                    <label>Phone</label>
-                    <input
-                        type="tel"
-                        name="phone"
-                        id="phone"
-                        value={enteredPhone}
-                        onBlur={phoneBlurHandler}
-                        onChange={phoneChangeHandler}
-                    />
-                    {phoneHasError && <p className={classes['error-text']}>Please enter valid phone.</p>}
-                </div>
-                <div className={classes.control}>
-                    <label>Gender</label>
-                    <select value={selectedGender} onChange={genderChangeHandler}>
-                        <option value="">--Please select your gender--</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-                <div className={classes.control}>
-                    <label>Speciality</label>
-                    <select value={selectedSpz} onChange={spzChangeHandler}>
-                        <option value="">--Please select a speciality--</option>
-                        {spzs.map(spz => <option key={spz} value={spz}>{spz}</option>)}
-                    </select>
-                </div>
+                )}
                 <div className={classes.actions}>
                     <button disabled={!formIsValid} className={classes.button}>
                         {isLoading ?
@@ -199,14 +275,17 @@ const DoctorForm = () => {
                                 strokeColor='var(--primary)'
                                 strokeWidth="5"
                                 animationDuration="0.75"
-                                width="25"
+                                width="20"
                                 visible={true}
                             />
                         : 'Register'}
                     </button>
                 </div>
             </form>
-            {!isLoading && isRegistered && <h1>{msg}</h1>}
+            {regAlertIsOpen &&
+                <Modal onClose={closeRegAlertHandler} className={classes['reg-alert']}>
+                    {alertContent}
+                </Modal>}
         </div>
     )
 }

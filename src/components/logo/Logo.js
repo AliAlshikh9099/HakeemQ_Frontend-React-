@@ -4,7 +4,7 @@ import classes from './Logo.module.css';
 const Logo = () => {
     return (
         <h1 className={classes.logo}>
-            <Link to='/'>HakeemQ</Link>
+            <Link to='/home'>HakeemQ</Link>
         </h1>
     )
 }

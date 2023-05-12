@@ -4,20 +4,6 @@
     flex-wrap: wrap;
     gap: 15px;
 }
-.schedule {
-    width: 160px;
-}
-.schedule label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-.schedule select {
-    width: 100%;
-    border: 1px solid var(--primary);
-    padding: 5px;
-    background-color: transparent;
-}
 .title h2 {
     margin-bottom: 8px;
 }

@@ -1,28 +1,22 @@
 import classes from './BookingForm.module.css';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import useInput from '../../../hooks/use-input';
+import Input from '../../UI/Input';
+
+import axios from 'axios';
+
+import AvailableTimes from './AvailableTimes';
 
 const nameValidation = value => value.trim() !== '';
 const emailValidation = value => value.includes('@');
 const phoneValidation = value => value.length === 10;
 const ageValidation = value => value > 18 && value < 100;
 
+const startDate = new Date();
+const endDate = new Date(startDate.getTime() +  1000 * 60 * 60 * 24 * 7);
+
 const BookingForm = (props) => {
-    const [selectedDay, setSelectedDay] = useState('Monday');
-
-    const [availableHoures, setAvailableHoures] = useState([]);
-
-    const selectDayHandler = event => {
-        setSelectedDay(event.target.value);
-    }
-
-    const { times } = props;
-
-    useEffect(() => {
-        const day = times.find(day => day.day === selectedDay);
-        setAvailableHoures(day.houres);
-    }, [selectedDay, times]);
 
     const { 
         value: enteredName,
@@ -64,6 +58,18 @@ const BookingForm = (props) => {
         valueBlurHandler: reasonBlurHandler,
         reset: resetReason
     } = useInput(nameValidation);
+    const { 
+        value: selectedGender,
+        isValid: selectedGenderIsValid,
+        valueChangeHandler: genderChangeHandler,
+        reset: resetGender
+    } = useInput(nameValidation);
+    const { 
+        value: selectedDate,
+        isValid: selectedDateIsValid,
+        valueChangeHandler: dateChangeHandler,
+        reset: resetDate
+    } = useInput(nameValidation);
 
     let formIsValid = false;
 
@@ -72,108 +78,184 @@ const BookingForm = (props) => {
         emailIsValid &&
         phoneIsValid &&
         ageIsValid &&
-        reasonIsValid
+        reasonIsValid && 
+        selectedGenderIsValid &&
+        selectedDateIsValid
     ) {
         formIsValid = true;
-    } 
+    }
+    
+    const [selectedTime, setSelectedTime] = useState(null);
 
-    const submitHandler = (event) => {
+    const chooseTimeHandler = (timeValue) => {
+        setSelectedTime(timeValue);
+    }
+
+    const inputElements = [
+        {
+            elementType: 'input',
+            id: 'name',
+            hasError: nameHasError,
+            errorMsg: 'Please enter a valid name (non empty value).',
+            config: {
+                type: 'text',
+                name: 'name',
+                value: enteredName,
+                onBlur: nameBlurHandler,
+                onChange: nameChangeHandler,
+            }
+        },
+        {
+            elementType: 'input',
+            id: 'email',
+            hasError: emailHasError,
+            errorMsg: 'Please enter a valid email.',
+            config: {
+                type: 'email',
+                name: 'email',
+                value: enteredEmail,
+                onBlur: emailBlurHandler,
+                onChange: emailChangeHandler,
+            }
+        },
+        {
+            elementType: 'input',
+            id: 'phone',
+            hasError: phoneHasError,
+            errorMsg: 'Please enter a valid phone',
+            config: {
+                type: 'tel',
+                name: 'phone',
+                value: enteredPhone,
+                onBlur: phoneBlurHandler,
+                onChange: phoneChangeHandler,
+            }
+        },
+        {
+            elementType: 'input',
+            id: 'age',
+            hasError: ageHasError,
+            errorMsg: 'Please enter a valid age',
+            config: {
+                type: 'number',
+                name: 'age',
+                value: enteredAge,
+                onBlur: ageBlurHandler,
+                onChange: ageChangeHandler,
+            }
+        },
+        {
+            elementType: 'textarea',
+            id: 'reason',
+            hasError: reasonHasError,
+            errorMsg: 'Please enter a valid value',
+            config: {
+                type: 'text',
+                name: 'reason',
+                value: enteredReason,
+                onBlur: reasonBlurHandler,
+                onChange: reasonChangeHandler,
+            }
+        },
+        {
+            elementType: 'select',
+            id: 'gender',
+            config: {
+                value: selectedGender,
+                onChange: genderChangeHandler,
+            },
+            options: [
+                { value: '', inner: '--please select your gender--' },
+                { value: 'Male', inner: 'Male' },
+                { value: 'Female', inner: 'Female' }
+            ]
+        },
+        {
+            elementType: 'input',
+            id: 'date',
+            config: {
+                type: 'date',
+                name: 'date',
+                min: startDate.toISOString().split('T')[0],
+                max: endDate.toISOString().split('T')[0],
+                value: selectedDate,
+                onChange: dateChangeHandler 
+            }
+        }
+    ]
+
+    const bookAppoitmentHandler = (event) => {
         event.preventDefault();
+
         const bookingData = {
             name: enteredName,
             email: enteredEmail,
             phone: enteredPhone,
             age: enteredAge,
-            reason: enteredReason
+            gender: selectedGender,
+            description: enteredReason,
+            appointment_date: selectedDate,
+            appointment_time: selectedTime,
+            doctor_id: props.id
         }
         console.log(bookingData);
+
+        axios.post('http://192.168.43.7:8000/api/appoints/store', bookingData, {
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(res => {
+                console.log(res);
+            }
+            )
+            .catch(error => console.log(error))
+
         resetName();
         resetEmail();
         resetPhone();
         resetAge();
         resetReason();
+        resetGender();
+        resetDate();
     }
 
-    const invalidNameClasses = nameHasError ? `${classes.control} ${classes.invalid}` : classes.control;
-    const invalidEmailClasses = emailHasError ? `${classes.control} ${classes.invalid}` : classes.control;
-    const invalidPhoneClasses = phoneHasError ? `${classes.control} ${classes.invalid}` : classes.control;
-    const invalidAgeHandler = ageHasError ? `${classes.control} ${classes.invalid}` : classes.control;
-    const invalidReasonClasses = reasonHasError ? `${classes.control} ${classes.invalid}` : classes.control;
+    const { onSelectDate } = props;
+
+    useEffect(() => {
+        onSelectDate(selectedDate);
+    }, [selectedDate, onSelectDate]);
 
     return (
-        <form onSubmit={submitHandler}>
+        <form onSubmit={bookAppoitmentHandler}>
             <div className={classes['input-form']}>
-                <div className={invalidNameClasses}>
-                    <label htmlFor='name'>Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={enteredName}
-                        onBlur={nameBlurHandler}
-                        onChange={nameChangeHandler}
+                {inputElements.map(el => 
+                    <Input 
+                        key={el.id}
+                        id={el.id}
+                        elementType={el.elementType}
+                        config={el.config}
+                        options={el.options}
+                        hasError={el.hasError}
+                        errorMsg={el.errorMsg}
                     />
-                    {nameHasError && <p className={classes['error-text']}>Please enter valid name (non empty value).</p>}
-                </div>
-                <div className={invalidEmailClasses}>
-                    <label htmlFor='email'>E-mail</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={enteredEmail}
-                        onBlur={emailBlurHandler}
-                        onChange={emailChangeHandler}
-                    />
-                    {emailHasError && <p className={classes['error-text']}>Please enter valid email.</p>}
-                </div>
-                <div className={invalidPhoneClasses}>
-                    <label htmlFor='phone'>Phone</label>
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={enteredPhone}
-                        onBlur={phoneBlurHandler}
-                        onChange={phoneChangeHandler}
-                    />
-                    {phoneHasError && <p className={classes['error-text']}>Please enter valid phone.</p>}
-                </div>
-                <div className={invalidAgeHandler}>
-                    <label htmlFor='age'>Age</label>
-                    <input
-                        type="number"
-                        id="age"
-                        name="age"
-                        value={enteredAge}
-                        onBlur={ageBlurHandler}
-                        onChange={ageChangeHandler}
-                    />
-                    {ageHasError && <p className={classes['error-text']}>Please enter valid age (greater than 18).</p>}
-                </div>
-                <div className={invalidReasonClasses}>
-                    <label htmlFor='reason'>Booking Reason</label>
-                    <textarea
-                        name='reason'
-                        id='reason'
-                        value={enteredReason}
-                        onBlur={reasonBlurHandler}
-                        onChange={reasonChangeHandler}
-                    ></textarea>
-                    {reasonHasError && <p className={classes['error-text']}>Please enter valid reason.</p>}
-                </div>
+                )}
+                {/* <div className={classes.control}>
+                    <label>Appointment Date</label>
+                    <div onClick={toggleCalendarHandler} className={classes.calendar}>
+                        <p>{props.formattedDate}</p>
+                        <FontAwesomeIcon className={classes.icon} icon={faCalendar} />
+                    </div>
+                    {calendarIsShown &&
+                        <Calendar
+                            value={props.calendarValue}
+                            onChange={selectDateHandler}
+                        />}
+                </div> */}
                 <div className={classes.control}>
-                    <label>Choose Day</label>
-                    <select onChange={selectDayHandler} value={selectedDay}>
-                        {times.map(day => <option key={day.day} value={day.day}>{day.day}</option>)}
-                    </select>
-                    <label>Available times in <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>
-                            {selectedDay}
-                        </span>:
-                    </label>
-                    <select>
-                        {availableHoures.map(time => <option key={time} value={time}>{time}</option>)}
-                    </select>
+                    <AvailableTimes
+                        onChoose={chooseTimeHandler}
+                        times={props.times}
+                        date={selectedDate}
+                    />
                 </div>
             </div>
             <div className={classes.action}>
