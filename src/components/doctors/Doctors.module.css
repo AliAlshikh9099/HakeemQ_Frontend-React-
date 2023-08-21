@@ -3,6 +3,10 @@
     padding-bottom: var(--section-padding);
     background-color: #f4f4f4;
 }
+.content {
+    display: flex;
+    align-items: center;
+}
 .swiper {
     padding: 40px 0;
 }

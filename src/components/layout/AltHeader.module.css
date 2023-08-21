@@ -17,6 +17,12 @@
     justify-content: space-between;
     height: 100%;
 }
+@media (max-width: 767px) {
+    .content {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
 .reg {
     display: flex;
     gap: 10px;
@@ -34,7 +40,7 @@
 .button,
 .button--alt {
     font-weight: bold;
-    padding: 10px 20px;
+    padding: 6px 20px;
     border: none;
     cursor: pointer;
     transition: 0.3s;

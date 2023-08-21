@@ -7,6 +7,14 @@
     height: 70%;
     overflow-y: scroll;
 }
+.loading-modal {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.error-modal {
+    width: calc(30% + 100px);
+}
 .booking-button {
     position: fixed;
     bottom: 20px;
@@ -36,6 +44,53 @@
 .booking-button:hover h4 {
     opacity: 1;
     display: inline-block;
+}
+.msg {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.msg-content  {
+    margin: 10px 0;
+    text-align: center;
+}
+.msg-content h3 {
+    text-transform: uppercase;
+    font-size: 32px;
+}
+.msg-content p {
+    margin-top: 10px;
+}
+.icon {
+    font-size: 80px;
+}
+.success .icon {
+    color: #2c962c;
+}
+
+.danger .icon {
+    color: red;
+}
+.success h3 {
+    color: green;
+}
+.danger h3 {
+    color: red;
+}
+.actions button  {
+    padding: 8px 16px;
+    border: 1px solid var(--primary);
+    background-color: transparent;
+    color: var(--primary);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.actions button:hover {
+    background-color: var(--primary);
+    color: #fff;
 }
 
 @keyframes lighting {

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ApiContext from "../../store/api-context";
 
 import { RotatingLines } from 'react-loader-spinner';
@@ -10,20 +10,22 @@ const DoctorsPage = () => {
 
     const [doctors, setDoctors] = useState([]);
 
-    const fetchDoctors =  useCallback(async () => {
+    const fetchDoctors = async() => {
         try {
-            const data = await sendRequest({ url: 'http://192.168.43.7:8000/api/doctors' })
+            const data = await sendRequest(
+                { url: '/doctors' }
+            )
             setDoctors(data.data);
         }
         catch (error) {
             console.error(error);
         }
-    }, [sendRequest]);
+    };
 
     useEffect(() => {
         fetchDoctors();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
 
     return (
         <div>

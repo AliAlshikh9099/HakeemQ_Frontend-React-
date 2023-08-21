@@ -1,97 +1,213 @@
 import BookingForm from "./Booking/BookingForm";
 import DoctorDetail from "./DoctorDetail";
-import classes from './DoctorItem.module.css';
-import Modal from '../UI/Modal';
+import classes from "./DoctorItem.module.css";
+// import Modal from "../UI/Modal";
 import { useState, useEffect, useContext, useCallback } from "react";
 import MoreInfo from "./MoreInfo";
-// import AvailableDates from "./AvailableDates";
+import { RotatingLines } from "react-loader-spinner";
 
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVideo } from "@fortawesome/free-solid-svg-icons";
+import {
+  faVideo,
+  faCheckCircle,
+  faCircleXmark,
+} from "@fortawesome/free-solid-svg-icons";
 
-import axios from "axios";
+import ApiContext from "../../store/api-context";
 
-import ApiContext from '../../store/api-context';
+import { Modal } from "antd";
+import BookingModal from "./Booking/BookingModal";
+import AuthContext from "../../store/auth-context";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
-const DoctorProfile = props => {
-    const sendRequest = useContext(ApiContext).sendRequest;
-    const error = useContext(ApiContext).error;
-    // const isLoading = useContext(ApiContext).isLoading;
+const DoctorProfile = (props) => {
+  const { isLoading, error, sendRequest } = useContext(ApiContext);
 
-    const [isLoading, setIsLoading] = useState(false);
+  const [chooseTimeLoading, setChooseTimeLoading] = useState(false);
 
-    const { name, spz, email, phone } = props.doctorInfo;
+  const [bookingModalIsVisible, setBookingModalIsVisible] = useState(false);
 
-    const [bookingModalIsVisible, setBookingModalIsVisible] = useState(false);
+  const [availableTimes, setAvailableTimes] = useState(null);
 
-    const [availableTimes, setAvailableTimes] = useState(null);
+  const [selectedDate, setSelectedDate] = useState();
 
-    const [selectedDate, setSelectedDate] = useState();
+  const [bookedMsg, setBookedMsg] = useState(null);
 
-    const showBookingModalHandler = () => {
-        setBookingModalIsVisible(true);
-    };
-    const closeBookingModalHandler = () => {
-        setBookingModalIsVisible(false);
-    };
+  const [registrationModal, setRegistrationModal] = useState(false);
 
-    const selectDateHandler = useCallback((date) => {
-        setSelectedDate(date);
-    }, [])
+  const { name, spz, email, phone } = props.doctorInfo;
 
-    useEffect(  () => {
-        setIsLoading(true);
-        axios.get(`http://192.168.43.7:8000/api/available-times/${props.id}/${selectedDate}`, {
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(res => {
-                setIsLoading(false);
-                console.log(res);
-                setAvailableTimes(res.data.available_times);
-            })
-            .catch(error => {
-                setIsLoading(false);
-                console.log(error);
-            })
-        // const data = sendRequest({
-        //     url: `http://192.168.43.7:8000/api/available-times/${props.id}/${formattedDate}`,
-        //     headers: { 'Content-Type': 'application/json' }
-        // });
-    }, [selectedDate, props.id]);
+  const { isAuth } = useContext(AuthContext);
 
-    return (
-        <div className={`${classes.profile} container`}>
-            <DoctorDetail
-                name={name}
-                spz={spz}
-                email={email}
-                phone={phone}
-                isLoading={isLoading}
-            />
-            {/* <AvailableDates
-                times='nothing'
-            /> */}
-            <MoreInfo />
-            {ReactDOM.createPortal(
-                <button onClick={showBookingModalHandler} className={classes['booking-button']}>
-                    <h4>Book an appoitment</h4>
-                    <FontAwesomeIcon icon={faVideo} />
-                </button>,
-                document.getElementById('overlays')
-            )}
-            {bookingModalIsVisible && <Modal className={`${classes['booking-modal']} container`} onClose={closeBookingModalHandler}>
-                <h1 style={{ marginBottom: '20px' }}>Dr.{name}</h1>
-                <BookingForm
-                    times={availableTimes}
-                    onClose={closeBookingModalHandler}
-                    id={props.id}
-                    onSelectDate={selectDateHandler}
-                />
-            </Modal>}
+  const navigate = useNavigate();
+
+  const showBookingModalHandler = () => {
+    // if (!isAuth) {
+    //   setRegistrationModal(true);
+    //   return;
+    // }
+    setBookingModalIsVisible(true);
+  };
+  const closeBookingModalHandler = () => {
+    setBookingModalIsVisible(false);
+  };
+
+  const selectDateHandler = useCallback((date) => {
+    setSelectedDate(date);
+  }, []);
+
+  const fetchAvailableTimes = useCallback(async () => {
+    if (selectedDate) {
+      setChooseTimeLoading(true);
+      try {
+        const data = await sendRequest({
+          url: `/available-times/${props.id}/${selectedDate}`,
+          headers: { "Content-Type": "application/json" },
+        });
+        setAvailableTimes(data.available_times);
+        setChooseTimeLoading(false);
+      } catch (error) {
+        setChooseTimeLoading(false);
+        console.log(error);
+      }
+    }
+  }, [props.id, selectedDate, sendRequest]);
+
+  useEffect(() => {
+    fetchAvailableTimes();
+  }, [fetchAvailableTimes]);
+
+  const bookAppoitmentHandler = async (bookingData) => {
+    try {
+      const data = await sendRequest({
+        url: "/appoints/store",
+        data: bookingData,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log(data);
+      setBookedMsg(data.msg);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  let modalContent = (
+    <>
+      <h1 style={{ marginBottom: "20px" }}>Dr.{name}</h1>
+      <BookingForm
+        times={availableTimes}
+        onClose={closeBookingModalHandler}
+        id={props.id}
+        onSelectDate={selectDateHandler}
+        onBook={bookAppoitmentHandler}
+        isLoading={chooseTimeLoading}
+      />
+    </>
+  );
+
+  if (isLoading) {
+    modalContent = (
+      <RotatingLines
+        strokeColor="var(--primary)"
+        strokeWidth="5"
+        animationDuration="0.75"
+        width="80"
+        visible={true}
+      />
+    );
+  }
+  if (error) {
+    modalContent = (
+      <div className={`${classes.msg} ${classes.danger}`}>
+        <FontAwesomeIcon className={classes.icon} icon={faCircleXmark} />
+        <div className={classes["msg-content"]}>
+          <h3>Error!</h3>
+          <p>{error}</p>
         </div>
-    )
+        <div className={classes.actions}>
+          <button onClick={closeBookingModalHandler}>Close</button>
+        </div>
+      </div>
+    );
+  }
+  if (!isLoading && !error && bookedMsg) {
+    modalContent = (
+      <div className={`${classes.msg} ${classes.success}`}>
+        <FontAwesomeIcon className={classes.icon} icon={faCheckCircle} />
+        <div className={classes["msg-content"]}>
+          <h3>Successful!</h3>
+          <p>
+            {bookedMsg}, booking information has been sent to your mail inbox...
+          </p>
+        </div>
+        <div className={classes.actions}>
+          <button onClick={closeBookingModalHandler}>Close</button>
+        </div>
+      </div>
+    );
+  }
+
+  const modalClasses = isLoading
+    ? classes["loading-modal"]
+    : error
+    ? classes["error-modal"]
+    : classes["booking-modal"];
+
+  return (
+    <div className={`${classes.profile} container`}>
+      <DoctorDetail
+        name={name}
+        spz={spz}
+        email={email}
+        phone={phone}
+        isLoading={isLoading}
+      />
+      <MoreInfo />
+      {ReactDOM.createPortal(
+        <button
+          onClick={showBookingModalHandler}
+          className={classes["booking-button"]}
+        >
+          <h4>Book an appoitment</h4>
+          <FontAwesomeIcon icon={faVideo} />
+        </button>,
+        document.getElementById("overlays")
+      )}
+
+      <Modal
+        title="Booking Appointemt"
+        open={bookingModalIsVisible}
+        onCancel={() => setBookingModalIsVisible(false)}
+        footer={null}
+      >
+        <BookingModal />
+      </Modal>
+      <Modal
+        open={registrationModal}
+        title="You are not authorized!"
+        onCancel={() => setRegistrationModal(false)}
+        onOk={() => navigate("/login")}
+        okText="login"
+      >
+        <div>
+          <p>
+            <Link style={{ color: "blue" }} to="/login">
+              Login
+            </Link>{" "}
+            or{" "}
+            <Link style={{ color: "blue" }} to="/user-register">
+              Register
+            </Link>{" "}
+            to book an appointment.
+          </p>
+        </div>
+      </Modal>
+    </div>
+  );
 };
 
 export default DoctorProfile;
