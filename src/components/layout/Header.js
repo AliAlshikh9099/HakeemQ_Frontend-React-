@@ -69,11 +69,11 @@ const Header = () => {
             </Dropdown>
           </div>
         )}
-        {authCtx.isAuth && (
+        {/* {authCtx.isAuth && (
           <Link className={classes.button} to="/dashboard">
             Your dashboard
           </Link>
-        )}
+        )} */}
         <Bar onClick={toggleMenuBarHandler} />
       </div>
       <MenuBar isClicked={barIsClicked} />

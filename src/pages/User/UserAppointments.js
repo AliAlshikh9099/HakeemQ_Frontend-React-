@@ -3,18 +3,18 @@ import ApiContext from "../../store/api-context";
 import AppoitmentsTable from "../../components/user/AppoitmentsTable";
 
 const UserAppointments = () => {
-  const { sendRequest, isLoading, error } = useContext(ApiContext);
+  // const { sendRequest, isLoading, error } = useContext(ApiContext);
 
-  const fetchAppointments = async () => {
-    const data = await sendRequest({
-      url: "/user/appoints",
-    });
-    console.log(data);
-  };
+  // const fetchAppointments = async () => {
+  //   const data = await sendRequest({
+  //     url: "/user/appoints",
+  //   });
+  //   console.log(data);
+  // };
 
-  useEffect(() => {
-    fetchAppointments();
-  }, []);
+  // useEffect(() => {
+  //   fetchAppointments();
+  // }, []);
 
   return (
     <div>

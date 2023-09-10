@@ -5,8 +5,35 @@ import DiabestIcon from "../../assets/glucose-meter.png";
 import NutritionIcon from "../../assets/schedule.png";
 import FamilyIcon from "../../assets/family.png";
 import PsyIcon from "../../assets/psychiatry.png";
+import { useContext } from "react";
+import ApiContext from "../../store/api-context";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Specialists = () => {
+  const { sendRequest, isLoading, error } = useContext(ApiContext);
+  const [spzs, setSpzs] = useState([]);
+
+  const fetchSpzs = async () => {
+    const data = await sendRequest({
+      url: "/spz",
+    });
+    let spzData = [];
+    for (const spz of spzs) {
+      const updatedSpz = {
+        ...spz,
+        icon: DiabestIcon,
+        animation: "flip-right",
+      };
+      spzData.push(updatedSpz);
+    }
+    setSpzs(data);
+  };
+
+  useEffect(() => {
+    fetchSpzs();
+  }, []);
+
   return (
     <section className="bg-blue-100 py-[70px]">
       <div className="container grid grid-cols-12 items-center gap-5">
@@ -24,6 +51,9 @@ const Specialists = () => {
         </div>
         <div className="col-span-12 md:col-span-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            {/* {spzs.map((spz) => (
+              <SpecialistCard ket={spz.id} name={spz.name} />
+            ))} */}
             <SpecialistCard
               name="Diabetes"
               icon={DiabestIcon}

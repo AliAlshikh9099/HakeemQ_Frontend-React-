@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import Modal from "antd/es/modal/Modal";
+import { Option } from "antd/es/mentions";
 
 const DoctorRegisterForm = () => {
   const { sendRequest, isLoading, error } = useContext(ApiContext);
@@ -20,26 +21,25 @@ const DoctorRegisterForm = () => {
 
   const [spzs, setSpzs] = useState([]);
 
+  const [isModalOpen, setModalIsOpen] = useState(false);
+
   const onFinish = async (values) => {
-    console.log("Received values of form: ", values);
-    const spz = spzs.find((spz) => spz.name === values.spz);
-    const spzId = spz.id;
     const regData = {
       ...values,
-      id: spzId,
     };
-    console.log(regData);
     const data = await sendRequest({
       url: "/register",
       data: regData,
+      method: "POST",
     });
-    console.log(data);
     if (data.status === 201) {
+      setModalIsOpen(true);
       notification.open({
         type: "success",
-        message: data.msg,
+        message: "Your account is pending, we'll contact you soon.",
+        duration: 10000,
       });
-      navigate("/dashboard");
+      navigate("/");
     }
   };
 
@@ -162,7 +162,17 @@ const DoctorRegisterForm = () => {
             },
           ]}
         >
-          <Select placeholder="Select your specialist" options={spzs}></Select>
+          <Select
+            placeholder="Select your specialist"
+            onChange={(e) => console.log(e)}
+            style={{ color: "black" }}
+          >
+            {spzs.map((spz) => (
+              <Option key={spz.id} value={spz.id}>
+                {spz.name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item>
@@ -181,7 +191,7 @@ const DoctorRegisterForm = () => {
           </Link>
         </Form.Item>
       </Form>
-      {/* <Modal title="Welcome Dr Omar Hasan" open={true} >
+      {/* <Modal title="Welcome Dr Omar Hasan" open={isModalOpen}>
         <p>Your account is pending, we'll contact you soon.</p>
       </Modal> */}
     </>

@@ -1,14 +1,21 @@
 import { useState } from "react";
-import { Button, message, Steps, theme } from "antd";
+import { Button, message, notification, Steps, theme } from "antd";
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { DatePicker, Radio } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { useContext } from "react";
+import ApiContext from "../../../store/api-context";
+import { useNavigate, useParams } from "react-router";
 
-const BookingModal = () => {
+const BookingModal = (props) => {
   const [date, setDate] = useState(null);
   const [reason, setReason] = useState(null);
+
+  const { sendRequest, isLoading, error } = useContext(ApiContext);
+
+  const { drId } = useParams();
 
   const dateChangeHandler = (value) => {
     console.log(value);
@@ -18,6 +25,36 @@ const BookingModal = () => {
   const reasonChangeHandler = (event) => {
     console.log(event.target.value);
     setReason(event.target.value);
+  };
+
+  const navigate = useNavigate();
+
+  const appintemntHandler = async () => {
+    const formattedDate = `${date.$y}-${date.$M + 1}-${date.$D}`;
+    const time = date.$H;
+
+    const data = await sendRequest({
+      method: "POST",
+      url: `/appoints/store`,
+      data: {
+        doctor_id: drId,
+        appointment_date: formattedDate,
+        appointment_time: time,
+        description: reason,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (data.status === 201) {
+      notification.open({
+        type: "success",
+        message: data.msg,
+      });
+      navigate("/user");
+    }
+    console.log(data);
   };
 
   const steps = [
@@ -81,8 +118,9 @@ const BookingModal = () => {
         {current === steps.length - 1 && (
           <Button
             type="primary"
-            onClick={() => message.success("Processing complete!")}
+            onClick={appintemntHandler}
             style={{ backgroundColor: "blue" }}
+            loading={isLoading}
           >
             Done
           </Button>
@@ -155,7 +193,6 @@ const Payment = () => {
       <Radio.Button value="a">MTN Cash</Radio.Button>
       <Radio.Button value="b">Syriatel Cash</Radio.Button>
       <Radio.Button value="c">Fatora</Radio.Button>
-      {/* <Radio.Button value="d">Chengdu</Radio.Button> */}
     </Radio.Group>
   );
 };

@@ -38,11 +38,11 @@ const MenuBar = (props) => {
               </Link>
             </div>
           )}
-          {authCtx.isAuth && (
+          {/* {authCtx.isAuth && (
             <Link className={classes.button} to="/dashboard">
               Your dashboard
             </Link>
-          )}
+          )} */}
         </ul>
       </div>
     </>

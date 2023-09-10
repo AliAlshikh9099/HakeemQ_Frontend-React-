@@ -11,8 +11,6 @@ import ApiContext from "../../store/api-context";
 import { RotatingLines } from "react-loader-spinner";
 import DoctorCardd from "./DoctorCardd";
 
-
-
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
 
@@ -63,14 +61,14 @@ const Doctors = () => {
         </p>
       </div>
       <div className="container grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <DoctorCardd name="Omar Shahwan" spz="Diabetes" isLoading={isLoading} />
-        <DoctorCardd name="Abdulhakim Albuni" spz="Nutrition" />
-        <DoctorCardd name="Ali Alshikh" spz="Family" />
-        <DoctorCardd name="Fton Almla" spz="Psychiatry" />
-        {/* <DoctorCardd name="" spz="" />
-        <DoctorCardd name="" spz="" />
-        <DoctorCardd name="" spz="" />
-        <DoctorCardd name="" spz="" /> */}
+        {doctors.map((dr) => (
+          <DoctorCardd
+            key={dr.id}
+            name={dr.name}
+            spz={dr.spz.name}
+            id={dr.id}
+          />
+        ))}
       </div>
     </div>
   );

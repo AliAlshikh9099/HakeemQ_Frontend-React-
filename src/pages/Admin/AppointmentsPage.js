@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const AppointmentsPage = () => {
-  return (
-    <div>
-      Appointments
-    </div>
-  )
-}
+  return <div>Appointments</div>;
+};
 
-export default AppointmentsPage
+export default AppointmentsPage;

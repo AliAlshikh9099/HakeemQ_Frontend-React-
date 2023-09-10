@@ -45,10 +45,10 @@ const DoctorProfile = (props) => {
   const navigate = useNavigate();
 
   const showBookingModalHandler = () => {
-    // if (!isAuth) {
-    //   setRegistrationModal(true);
-    //   return;
-    // }
+    if (!isAuth) {
+      setRegistrationModal(true);
+      return;
+    }
     setBookingModalIsVisible(true);
   };
   const closeBookingModalHandler = () => {

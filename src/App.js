@@ -13,7 +13,6 @@ import DoctorsPage from "./pages/DoctorsPage/DoctorsPage";
 import SessionRoom from "./pages/SessionRoom/SessionRoom";
 
 import "react-loading-skeleton/dist/skeleton.css";
-import PreparingRoom from "./pages/SessionRoom/PreparingRoom";
 import Main from "./components/dashboard/main/Main";
 import UserRegisterPage from "./pages/User/UserRegisterPage";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
@@ -46,13 +45,15 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/doctors" element={<DoctorsPage />} />
       <Route path="/doctors/:drId" element={<DoctorProfile />} />
-      {!authCtx.isAuth && <Route path="/login" element={<LoginPage />} />}
-      {!authCtx.isAuth && (
-        <Route path="/doctor-register" element={<RegisterPage />} />
-      )}
+      <Route path="/login" element={<LoginPage />} />
+
+      <Route path="/doctor-register" element={<RegisterPage />} />
+
       <Route path="/doctor-login" element={<DoctorLoginPage />} />
       <Route path="/spzs/:id" element={<SpecialistPage />} />
-      <Route path="/user-register" element={<UserRegisterPage />} />
+      {!authCtx.isActive && (
+        <Route path="/user-register" element={<UserRegisterPage />} />
+      )}
       {!authCtx.isAuth && (
         <Route path="/dashboard/*" element={<Dashboard />}>
           <Route path="main" element={<Main />} />
@@ -63,17 +64,19 @@ function App() {
       {!authCtx.isAuth && (
         <Route path="/dashboard" element={<Navigate to="/dashboard/main" />} />
       )}
-      {!authCtx.isAuth && (
+      {authCtx.isAuth && (
         <Route path="/user/*" element={<UserDashboard />}>
           <Route path="appointments" element={<UserAppointments />} />
           <Route path="profile" element={<>Profile</>} />
         </Route>
       )}
-      {!authCtx.isAuth && (
+      {authCtx.isAuth && (
         <Route path="/user" element={<Navigate to="/user/appointments" />} />
       )}
-      <Route path="/room" element={<PreparingRoom />} />
-      <Route path="/room/session" element={<SessionRoom />} />
+      {/* <Route path="/room" element={<PreparingRoom />} /> */}
+      {authCtx.isAuth && (
+        <Route path="/room/session" element={<SessionRoom />} />
+      )}
       <Route path="/admin/*" element={<AdminDashboard />}>
         <Route path="admin-doctors" element={<DoctorsListPage />} />
         <Route path="admin-appointments" element={<AppointmentsPage />} />

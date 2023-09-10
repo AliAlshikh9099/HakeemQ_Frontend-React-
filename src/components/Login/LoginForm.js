@@ -3,8 +3,11 @@ import { Button, Form, Input, notification } from "antd";
 import { useContext } from "react";
 import ApiContext from "../../store/api-context";
 import { useNavigate } from "react-router";
+import AuthContext from "../../store/auth-context";
 const LoginForm = () => {
   const { sendRequest, isLoading, error } = useContext(ApiContext);
+
+  const { login } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -15,12 +18,13 @@ const LoginForm = () => {
       data: values,
     });
     console.log(data);
-    if (data.status === 201) {
+    if (data) {
       notification.open({
         type: "success",
-        message: data.msg,
+        message: data.message,
       });
-      navigate("/user-profile");
+      login(data);
+      navigate("/user");
     }
   };
 
